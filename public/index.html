@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Web Scraper Notes - 智能网页爬虫笔记系统，抓取指定网站内容并生成结构化笔记">
+  <title>WebScribe — 智能网页爬虫笔记系统</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+        </div>
+        <span class="logo-text">WebScribe</span>
+      </div>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item active" data-view="dashboard">
+        <a href="#dashboard">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          <span>仪表板</span>
+        </a>
+      </li>
+      <li class="nav-item" data-view="sites">
+        <a href="#sites">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <span>网站管理</span>
+        </a>
+      </li>
+      <li class="nav-item" data-view="notes">
+        <a href="#notes">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          <span>笔记浏览</span>
+        </a>
+      </li>
+      <li class="nav-item" data-view="history">
+        <a href="#history">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span>爬取历史</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="version-info">v1.0.0 · 本地工具</div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+    <!-- Dashboard View -->
+    <section class="view active" id="view-dashboard">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">仪表板</h1>
+          <p class="view-subtitle">系统概览与最近活动</p>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-icon" style="--accent: #6366f1;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-sites">0</span>
+            <span class="stat-label">监控网站</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="--accent: #10b981;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-notes">0</span>
+            <span class="stat-label">总笔记数</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="--accent: #f59e0b;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-scrapes">0</span>
+            <span class="stat-label">总爬取次数</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="--accent: #ef4444;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-changes">0</span>
+            <span class="stat-label">内容变更</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>最近活动</h2>
+        </div>
+        <div class="card-body" id="recentActivity">
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <p>暂无活动记录</p>
+            <span>添加网站并开始爬取</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sites Management View -->
+    <section class="view" id="view-sites">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">网站管理</h1>
+          <p class="view-subtitle">添加和管理要爬取的网站</p>
+        </div>
+        <button class="btn btn-primary" id="btnAddSite" onclick="showAddSiteModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          添加网站
+        </button>
+      </div>
+
+      <div id="sitesList" class="sites-list">
+        <div class="empty-state">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <p>还没有添加任何网站</p>
+          <span>点击上方"添加网站"按钮开始</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notes View -->
+    <section class="view" id="view-notes">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">笔记浏览</h1>
+          <p class="view-subtitle">查看爬取生成的所有笔记</p>
+        </div>
+      </div>
+
+      <div class="filters-bar" id="notesFilters">
+        <div class="search-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="noteSearch" placeholder="搜索笔记标题或内容..." oninput="debounceSearch()">
+        </div>
+        <select id="noteSiteFilter" class="filter-select" onchange="loadNotes()">
+          <option value="">所有网站</option>
+        </select>
+        <label class="filter-checkbox">
+          <input type="checkbox" id="noteChangesOnly" onchange="loadNotes()">
+          <span>仅显示变更</span>
+        </label>
+      </div>
+
+      <div id="notesList" class="notes-grid">
+        <div class="empty-state">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <p>暂无笔记</p>
+          <span>爬取网站后将自动生成笔记</span>
+        </div>
+      </div>
+
+      <div id="notesPagination" class="pagination"></div>
+    </section>
+
+    <!-- History View -->
+    <section class="view" id="view-history">
+      <div class="view-header">
+        <div>
+          <h1 class="view-title">爬取历史</h1>
+          <p class="view-subtitle">查看所有爬取任务的记录</p>
+        </div>
+      </div>
+
+      <div id="historyList" class="history-list">
+        <div class="empty-state">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <p>暂无爬取记录</p>
+          <span>开始爬取网站后记录将出现在这里</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Note Detail View -->
+    <section class="view" id="view-note-detail">
+      <div class="view-header">
+        <div>
+          <button class="btn btn-ghost" onclick="navigateTo('notes')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            返回笔记列表
+          </button>
+          <h1 class="view-title" id="noteDetailTitle">笔记详情</h1>
+          <p class="view-subtitle" id="noteDetailMeta"></p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body note-content-display" id="noteDetailContent">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Add Site Modal -->
+  <div class="modal-overlay" id="addSiteModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">添加新网站</h2>
+        <button class="btn-close" onclick="closeModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="siteForm" onsubmit="handleSiteSubmit(event)">
+        <input type="hidden" id="editSiteId" value="">
+        <div class="form-group">
+          <label for="siteUrl">网站网址 <span class="required">*</span></label>
+          <input type="url" id="siteUrl" placeholder="https://example.com" required>
+          <span class="form-hint">输入要爬取的网站完整地址</span>
+        </div>
+        <div class="form-group">
+          <label for="siteName">网站名称</label>
+          <input type="text" id="siteName" placeholder="自动从域名生成">
+          <span class="form-hint">留空则自动使用域名作为名称</span>
+        </div>
+        <div class="form-group">
+          <label for="siteDepth">爬取深度</label>
+          <div class="depth-control">
+            <input type="range" id="siteDepth" min="0" max="5" value="2" oninput="updateDepthDisplay()">
+            <span class="depth-value" id="depthValue">2</span>
+          </div>
+          <span class="form-hint">0=仅当前页面, 1=子页面, 2-5=更深层递归</span>
+        </div>
+        <div class="form-group">
+          <label for="siteCron">定时爬取 (Cron 表达式)</label>
+          <input type="text" id="siteCron" placeholder="例如: 0 */6 * * * (每6小时)">
+          <span class="form-hint">留空表示仅手动爬取</span>
+          <div class="cron-presets">
+            <button type="button" class="cron-preset" onclick="setCron('*/30 * * * *')">每30分钟</button>
+            <button type="button" class="cron-preset" onclick="setCron('0 * * * *')">每小时</button>
+            <button type="button" class="cron-preset" onclick="setCron('0 */6 * * *')">每6小时</button>
+            <button type="button" class="cron-preset" onclick="setCron('0 0 * * *')">每天</button>
+            <button type="button" class="cron-preset" onclick="setCron('0 0 * * 1')">每周一</button>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" onclick="closeModal()">取消</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitSite">添加网站</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
